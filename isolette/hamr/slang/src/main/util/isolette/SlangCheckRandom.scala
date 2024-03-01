@@ -3,6 +3,8 @@
 package isolette
 
 import org.sireum._
+import isolette.Isolette_Data_Model.{TempWstatus_impl, ValueStatus}
+
 import org.sireum.Random.Gen64
 
 /*
@@ -299,6 +301,29 @@ Monitor_Subsystem_Containers.scala
     def get_Config_F32: Config_F32
     def set_Config_F32(config: Config_F32): RandomLib
 
+  def nextF32(): F32 = {
+    val c = get_Config_F32
+    var i = 0
+    while (i != get_Config_F32.attempts) {
+      val r: F32 = (c.low, c.high) match {
+        case (Some(low), Some(high)) => gen.nextF32Between(low, high)
+        case (Some(low), None()) => gen.nextF32Between(low, F32.MaxValue)
+        case (None(), Some(high)) => gen.nextF32Between(F32.MinValue, high)
+        case _ => gen.nextF32()
+      }
+      if (get_Config_F32.filter(r)) {
+        return r
+      }
+      if (get_Config_F32.verbose) {
+        println(s"Retrying for failing value: $r")
+      }
+      i = i + 1
+    }
+    assert(F, "Requirements too strict to generate")
+    halt("Requirements too strict to generate")
+  }
+
+  /*
     def nextF32(): F32 = {
       val conf = get_Config_F32
 
@@ -358,6 +383,7 @@ Monitor_Subsystem_Containers.scala
       assert(F, "Requirements too strict to generate")
       halt("Requirements too strict to generate")
     }
+*/
 
   // ========  F64 ==========
     def get_Config_F64: Config_F64
@@ -3267,6 +3293,26 @@ Monitor_Subsystem_Containers.scala
   def get_Config_Isolette_Data_ModelTempWstatus_impl: Config_Isolette_Data_ModelTempWstatus_impl
   def set_Config_Isolette_Data_ModelTempWstatus_impl(config: Config_Isolette_Data_ModelTempWstatus_impl): RandomLib
 
+  def nextIsolette_Data_ModelTempWstatus_impl(): TempWstatus_impl = {
+    val c = get_Config_Isolette_Data_ModelTempWstatus_impl
+    var i = 0
+    while (i != c.attempts) {
+      val value = nextF32()
+      val status = nextIsolette_Data_ModelValueStatusType()
+      val v = TempWstatus_impl(value, status)
+      if (c.filter(v)) {
+        return v
+      }
+      if (c.verbose) {
+        println(s"Retrying for failing value: $v")
+      }
+      i = i + 1
+    }
+    assert(F, "Requirements too strict to generate")
+    halt("Requirements too strict to generate")
+  }
+
+  /*
   def nextIsolette_Data_ModelTempWstatus_impl(): Isolette_Data_Model.TempWstatus_impl = {
     var value: F32 = nextF32()
     var status: Isolette_Data_Model.ValueStatus.Type = nextIsolette_Data_ModelValueStatusType()
@@ -3302,6 +3348,7 @@ Monitor_Subsystem_Containers.scala
     assert(F, "Requirements too strict to generate")
     halt("Requirements too strict to generate")
   }
+  */
 
   // ============= Isolette_Data_Model.TempWstatus_impl_Payload ===================
 
@@ -3422,6 +3469,25 @@ Monitor_Subsystem_Containers.scala
   def get_Config_Isolette_Data_ModelValueStatusType: Config_Isolette_Data_ModelValueStatusType
   def set_Config_Isolette_Data_ModelValueStatusType(config: Config_Isolette_Data_ModelValueStatusType): RandomLib
 
+  def nextIsolette_Data_ModelValueStatusType(): ValueStatus.Type = {
+    val c = get_Config_Isolette_Data_ModelValueStatusType
+    var i = 0
+    while (i != c.attempts) {
+      val ordinal: Z = gen.nextZBetween(0, ValueStatus.numOfElements - 1)
+      val v = ValueStatus.byOrdinal(ordinal).get
+      if (c.filter(v)) {
+        return v
+      }
+      if (c.verbose) {
+        println(s"Retrying for failing value: $v")
+      }
+      i = i + 1
+    }
+    assert(F, "Requirements too strict to generate")
+    halt("Requirements too strict to generate")
+  }
+
+  /*
   def nextIsolette_Data_ModelValueStatusType(): Isolette_Data_Model.ValueStatus.Type = {
 
     var ordinal: Z = gen.nextZBetween(0, isolette.Isolette_Data_Model.ValueStatus.numOfElements-1)
@@ -3453,6 +3519,7 @@ Monitor_Subsystem_Containers.scala
     assert(F, "Requirements too strict to generate")
     halt("Requirements too strict to generate")
   }
+   */
 
   // ============= Isolette_Data_Model.ValueStatus_Payload ===================
 
