@@ -20,17 +20,37 @@ class Manage_Heat_Source_impl_thermostat_regulate_temperature_manage_heat_source
 
   // profiles that will be used for the initialise tests
   override def getInitialiseProfiles: MSZ[Manage_Heat_Source_impl_thermostat_regulate_temperature_manage_heat_source_Profile] = {
-    return MSZ(getDefaultInitialiseProfile)
+    return MSZ()//MSZ(getDefaultInitialiseProfile)
   }
 
   // profiles that will be used to generate the incoming port values
   override def getProfiles_P: MSZ[Manage_Heat_Source_impl_thermostat_regulate_temperature_manage_heat_source_Profile_P] = {
-    return MSZ(getDefaultProfile_P)
+    return MSZ()//MSZ(getDefaultProfile_P)
   }
 
   // profiles that will be used to generate the incoming port values
   // and the pre-state values of the state variables
   override def getProfiles_PS: MSZ[Manage_Heat_Source_impl_thermostat_regulate_temperature_manage_heat_source_Profile_PS] = {
-    return MSZ(getDefaultProfile_PS)
+    //return MSZ(getDefaultProfile_PS)
+    val p = getDefaultProfile_PS
+    var rl: RandomLib = getDefaultProfile_PS.api_lower_desired_temp
+
+    // set the verbosity to true for all configs -- note this form does not cause a
+    // copy of rl to be created
+    rl.defaultVerbosity = F
+
+    // alternate form that allows for chaining. The first setXX method's 'return this'
+    // returns a copy of rl that a subsequent setXX will operate on. So need to update
+    // rl with the last copy in the chain
+    rl = rl.setVerbosity(T).set_Config_F32(rl.get_Config_F32(low = Some(0f), attempts = Some(-1), filter = v => v == 100.0f))
+
+    // in this form the returned copy is discarded, but rl was side affected. Note it's
+    // likely api_lower_desired_temp's nextF32 will run for a very long time as its
+    // filter requires 100.0f to be generated and its attempts of -1 set above overrides
+    // the 50 below
+    rl.setAttempts(50)
+
+    return MSZ(p(api_lower_desired_temp = rl))
+
   }
 }

@@ -65,7 +65,12 @@ Regulate_Subsystem_Containers.scala
 Monitor_Subsystem_Containers.scala
 
 */
+@sig trait Configuration {
+  def attempts: Option[Z]
+  def verbose: Option[B]
+}
 @datatype class Config_String(minSize: Z, maxSize: Z, attempts: Z, verbose: B, filter: String => B) {}
+
 @datatype class Config_Z(low: Option[Z], high: Option[Z], attempts: Z, verbose: B, filter: Z => B) {}
 
 @datatype class Config_B(attempts: Z, verbose: B, filter: B => B) {}
@@ -74,7 +79,7 @@ Monitor_Subsystem_Containers.scala
 
 @datatype class Config_R(low: Option[R], high: Option[R], attempts: Z, verbose: B, filter: R => B) {}
 
-@datatype class Config_F32(low: Option[F32], high: Option[F32], attempts: Z, verbose: B, filter: F32 => B) {}
+@datatype class Config_F32(low: Option[F32], high: Option[F32], attempts: Option[Z], verbose: Option[B], filter: F32 => B) extends Configuration
 
 @datatype class Config_F64(low: Option[F64], high: Option[F64], attempts: Z, verbose: B, filter: F64 => B) {}
 
@@ -192,7 +197,7 @@ Monitor_Subsystem_Containers.scala
 
 @datatype class Config_Isolette_Data_ModelStatus_Payload(attempts: Z, verbose: B, filter: Isolette_Data_Model.Status_Payload => B) {}
 
-@datatype class Config_Isolette_Data_ModelTempWstatus_impl(attempts: Z, verbose: B, filter: Isolette_Data_Model.TempWstatus_impl => B) {}
+@datatype class Config_Isolette_Data_ModelTempWstatus_impl(attempts: Option[Z], verbose: Option[B], filter: Isolette_Data_Model.TempWstatus_impl => B) extends  Configuration
 
 @datatype class Config_Isolette_Data_ModelTempWstatus_impl_Payload(attempts: Z, verbose: B, filter: Isolette_Data_Model.TempWstatus_impl_Payload => B) {}
 
@@ -200,7 +205,7 @@ Monitor_Subsystem_Containers.scala
 
 @datatype class Config_Isolette_Data_ModelTemp_impl_Payload(attempts: Z, verbose: B, filter: Isolette_Data_Model.Temp_impl_Payload => B) {}
 
-@datatype class Config_Isolette_Data_ModelValueStatusType(attempts: Z, verbose: B, filter: Isolette_Data_Model.ValueStatus.Type => B) {}
+@datatype class Config_Isolette_Data_ModelValueStatusType(attempts: Option[Z], verbose: Option[B], filter: Isolette_Data_Model.ValueStatus.Type => B) extends Configuration
 
 @datatype class Config_Isolette_Data_ModelValueStatus_Payload(attempts: Z, verbose: B, filter: Isolette_Data_Model.ValueStatus_Payload => B) {}
 

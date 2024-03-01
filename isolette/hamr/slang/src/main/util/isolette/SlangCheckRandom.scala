@@ -74,6 +74,9 @@ Monitor_Subsystem_Containers.scala
   def get_numElement: Z
   def set_numElement(s: Z): Unit
 
+  def getAttempts(c: Configuration): Z
+  def getVerbosity(c: Configuration): B
+
   // ========  Z ==========
     def get_Config_Z: Config_Z
     def set_Config_Z(config: Config_Z): RandomLib
@@ -304,7 +307,7 @@ Monitor_Subsystem_Containers.scala
   def nextF32(): F32 = {
     val c = get_Config_F32
     var i = 0
-    while (i != c.attempts) {
+    while (i != getAttempts(c)) {
       val v: F32 = (c.low, c.high) match {
         case (Some(low), Some(high)) => gen.nextF32Between(low, high)
         case (Some(low), None()) => gen.nextF32Between(low, F32.MaxValue)
@@ -314,7 +317,7 @@ Monitor_Subsystem_Containers.scala
       if (c.filter(v)) {
         return v
       }
-      if (c.verbose) {
+      if (getVerbosity(c)) {
         println(s"Retrying for failing value: $v")
       }
       i = i + 1
@@ -3296,14 +3299,14 @@ Monitor_Subsystem_Containers.scala
   def nextIsolette_Data_ModelTempWstatus_impl(): TempWstatus_impl = {
     val c = get_Config_Isolette_Data_ModelTempWstatus_impl
     var i = 0
-    while (i != c.attempts) {
+    while (i != getAttempts(c)) {
       val value = nextF32()
       val status = nextIsolette_Data_ModelValueStatusType()
       val v = TempWstatus_impl(value, status)
       if (c.filter(v)) {
         return v
       }
-      if (c.verbose) {
+      if (getVerbosity(c)) {
         println(s"Retrying for failing value: $v")
       }
       i = i + 1
@@ -3472,13 +3475,13 @@ Monitor_Subsystem_Containers.scala
   def nextIsolette_Data_ModelValueStatusType(): ValueStatus.Type = {
     val c = get_Config_Isolette_Data_ModelValueStatusType
     var i = 0
-    while (i != c.attempts) {
+    while (i != getAttempts(c)) {
       val ordinal: Z = gen.nextZBetween(0, ValueStatus.numOfElements - 1)
       val v = ValueStatus.byOrdinal(ordinal).get
       if (c.filter(v)) {
         return v
       }
-      if (c.verbose) {
+      if (getVerbosity(c)) {
         println(s"Retrying for failing value: $v")
       }
       i = i + 1
@@ -6303,15 +6306,29 @@ Monitor_Subsystem_Containers.scala
 
 }
 
-@record class RandomLib(val gen: org.sireum.Random.Gen) extends RandomLibI {
+@record class RandomLib(var defaultAttempts: Z,
+                        var defaultVerbosity: B,
+                        val gen: org.sireum.Random.Gen) extends RandomLibI {
 
-  var numElem: Z = 50
-
-  var _verbose: B = F
-  def verbose: RandomLib = {
-    _verbose = !_verbose
+  override def getAttempts(c: Configuration): Z = {
+    return (if (c.attempts.nonEmpty) c.attempts.get else defaultAttempts)
+  }
+  def setAttempts(v: Z) : RandomLib = {
+    defaultAttempts = v
     return this
   }
+
+  override def getVerbosity(c: Configuration): B = {
+    return (if (c.verbose.nonEmpty) c.verbose.get else defaultVerbosity)
+  }
+  def setVerbosity(v: B): RandomLib = {
+    defaultVerbosity = v
+    return this
+  }
+
+  var _verbose: B = F
+
+  var numElem: Z = 50
 
   def get_numElement: Z = {return numElem}
 
@@ -6379,7 +6396,7 @@ Monitor_Subsystem_Containers.scala
   // ============= F32 ===================
   def alwaysTrue_F32(v: F32): B = {return T}
 
-  var config_F32: Config_F32 = Config_F32(None(), None(), 100, _verbose, alwaysTrue_F32 _)
+  var config_F32: Config_F32 = Config_F32(None(), None(), None(), None(), alwaysTrue_F32 _)
   def get_Config_F32: Config_F32 = {return config_F32}
 
   def set_Config_F32(config: Config_F32): RandomLib ={
@@ -7076,7 +7093,7 @@ Monitor_Subsystem_Containers.scala
   // ============= Isolette_Data_Model.TempWstatus_impl ===================
   def alwaysTrue_Isolette_Data_ModelTempWstatus_impl(v: Isolette_Data_Model.TempWstatus_impl): B = {return T}
 
-  var config_Isolette_Data_ModelTempWstatus_impl: Config_Isolette_Data_ModelTempWstatus_impl = Config_Isolette_Data_ModelTempWstatus_impl(100, _verbose, alwaysTrue_Isolette_Data_ModelTempWstatus_impl _)
+  var config_Isolette_Data_ModelTempWstatus_impl: Config_Isolette_Data_ModelTempWstatus_impl = Config_Isolette_Data_ModelTempWstatus_impl(None(), None(), alwaysTrue_Isolette_Data_ModelTempWstatus_impl _)
 
   def get_Config_Isolette_Data_ModelTempWstatus_impl: Config_Isolette_Data_ModelTempWstatus_impl = {return config_Isolette_Data_ModelTempWstatus_impl}
 
@@ -7124,7 +7141,7 @@ Monitor_Subsystem_Containers.scala
   // ============= Isolette_Data_Model.ValueStatus.Type ===================
   def alwaysTrue_Isolette_Data_ModelValueStatusType(v: Isolette_Data_Model.ValueStatus.Type): B = {return T}
 
-  var config_Isolette_Data_ModelValueStatusType: Config_Isolette_Data_ModelValueStatusType = Config_Isolette_Data_ModelValueStatusType(100, _verbose, alwaysTrue_Isolette_Data_ModelValueStatusType _)
+  var config_Isolette_Data_ModelValueStatusType: Config_Isolette_Data_ModelValueStatusType = Config_Isolette_Data_ModelValueStatusType(None(), None(), alwaysTrue_Isolette_Data_ModelValueStatusType _)
 
   def get_Config_Isolette_Data_ModelValueStatusType: Config_Isolette_Data_ModelValueStatusType = {return config_Isolette_Data_ModelValueStatusType}
 
