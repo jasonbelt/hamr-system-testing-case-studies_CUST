@@ -15,6 +15,6 @@ object Monitor_Subsystem_Inputs_Container_Util {
   }
 
   def freshRandomLib: RandomLib = {
-    return RandomLib(Random.Gen64Impl(Xoshiro256.createSeed(getSeed)))
+    return RandomLib(100, F, Random.Gen64Impl(Xoshiro256.createSeed(getSeed)))
   }
 }

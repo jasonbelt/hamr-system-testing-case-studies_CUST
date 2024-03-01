@@ -82,7 +82,7 @@ trait Manage_Regulator_Mode_impl_thermostat_regulate_temperature_manage_regulato
 
   def seedGen: Gen64 = Random.Gen64Impl(Xoshiro256.create)
 
-  def freshRandomLib: RandomLib = RandomLib(Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
+  def freshRandomLib: RandomLib = RandomLib(100, F, Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
 
   def getInitialiseProfiles: MSZ[Manage_Regulator_Mode_impl_thermostat_regulate_temperature_manage_regulator_mode_Profile]
 

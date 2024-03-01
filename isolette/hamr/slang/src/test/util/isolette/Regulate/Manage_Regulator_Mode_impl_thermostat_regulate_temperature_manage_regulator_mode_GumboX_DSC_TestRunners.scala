@@ -19,9 +19,9 @@ import org.sireum.Random.Impl.Xoshiro256
   val verbose: B = F
 
   var seedGen: Gen64 = Random.Gen64Impl(Xoshiro256.create)
-  val ranLibcurrent_tempWstatus: RandomLib = RandomLib(Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
-  val ranLibinterface_failure: RandomLib = RandomLib(Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
-  val ranLibinternal_failure: RandomLib = RandomLib(Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
+  val ranLibcurrent_tempWstatus: RandomLib = RandomLib(100, F, Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
+  val ranLibinterface_failure: RandomLib = RandomLib(100, F, Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
+  val ranLibinternal_failure: RandomLib = RandomLib(100, F, Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
 
   override def next(): Manage_Regulator_Mode_impl_thermostat_regulate_temperature_manage_regulator_mode_PreState_Container_P = {
     val api_current_tempWstatus = ranLibcurrent_tempWstatus.nextIsolette_Data_ModelTempWstatus_impl()
@@ -64,10 +64,10 @@ import org.sireum.Random.Impl.Xoshiro256
   val verbose: B = F
 
   var seedGen: Gen64 = Random.Gen64Impl(Xoshiro256.create)
-  val ranLiblastRegulatorMode: RandomLib = RandomLib(Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
-  val ranLibcurrent_tempWstatus: RandomLib = RandomLib(Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
-  val ranLibinterface_failure: RandomLib = RandomLib(Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
-  val ranLibinternal_failure: RandomLib = RandomLib(Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
+  val ranLiblastRegulatorMode: RandomLib = RandomLib(100, F, Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
+  val ranLibcurrent_tempWstatus: RandomLib = RandomLib(100, F, Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
+  val ranLibinterface_failure: RandomLib = RandomLib(100, F, Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
+  val ranLibinternal_failure: RandomLib = RandomLib(100, F, Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
 
   override def next(): Manage_Regulator_Mode_impl_thermostat_regulate_temperature_manage_regulator_mode_PreState_Container_PS = {
     val In_lastRegulatorMode = ranLiblastRegulatorMode.nextIsolette_Data_ModelRegulator_ModeType()

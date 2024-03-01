@@ -39,7 +39,7 @@ class SystemTestsIllustrations extends SystemTestSuite {
 
   def seedGen: Gen64 = Random.Gen64Impl(Xoshiro256.create)
 
-  def freshRandomLib: RandomLib = RandomLib(Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
+  def freshRandomLib: RandomLib = RandomLib(100, F, Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
 
   // Suggestion: add the following import renamings of the components' SystemTestAPIs,
   //             replacing nickname with shortened versions that are easier to reference

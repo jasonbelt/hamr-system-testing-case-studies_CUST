@@ -82,7 +82,7 @@ trait Manage_Monitor_Mode_impl_thermostat_monitor_temperature_manage_monitor_mod
 
   def seedGen: Gen64 = Random.Gen64Impl(Xoshiro256.create)
 
-  def freshRandomLib: RandomLib = RandomLib(Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
+  def freshRandomLib: RandomLib = RandomLib(100, F, Random.Gen64Impl(Xoshiro256.createSeed(seedGen.genU64())))
 
   def getInitialiseProfiles: MSZ[Manage_Monitor_Mode_impl_thermostat_monitor_temperature_manage_monitor_mode_Profile]
 
